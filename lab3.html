@@ -1,0 +1,99 @@
+
+<html>
+  <head>
+    <title>Calculator</title>
+  </head>
+  <body>
+    <h1>Calculator</h1>
+    <input id="num1" type="number">
+    <select id="operator">
+      <option value="add">Addition</option>
+      <option value="sub">Subtraction</option>
+      <option value="mul">Multiplication</option>
+      <option value="div">Division</option>
+    </select>
+    <input id="num2" type="number">
+    <button id="calculate">Calculate</button>
+    <p id="result"></p>
+
+    <script>
+      // Define the common interface for all calculation strategies
+      class CalculationStrategy {
+        calculate(num1, num2) {
+          // The default implementation does nothing
+        }
+      }
+
+      // Define the concrete calculation strategies
+      class AdditionStrategy extends CalculationStrategy {
+        calculate(num1, num2) {
+          return num1 + num2;
+        }
+      }
+
+      class SubtractionStrategy extends CalculationStrategy {
+        calculate(num1, num2) {
+          return num1 - num2;
+        }
+      }
+
+      class MultiplicationStrategy extends CalculationStrategy {
+        calculate(num1, num2) {
+          return num1 * num2;
+        }
+      }
+
+      class DivisionStrategy extends CalculationStrategy {
+        calculate(num1, num2) {
+          if (num2 === 0) {
+            return "Error: Cannot divide by zero";
+          }
+          return num1 / num2;
+        }
+      }
+
+      // Define the context that uses the calculation strategies
+      class Calculator {
+        constructor() {
+          this.num1 = document.getElementById("num1");
+          this.num2 = document.getElementById("num2");
+          this.operator = document.getElementById("operator");
+          this.calculateButton = document.getElementById("calculate");
+          this.result = document.getElementById("result");
+
+          // Set the default calculation strategy
+          this.strategy = new AdditionStrategy();
+
+          // Add event listener for the Calculate button
+          this.calculateButton.addEventListener("click", () => {
+            const num1 = Number(this.num1.value);
+            const num2 = Number(this.num2.value);
+            const result = this.strategy.calculate(num1, num2);
+            this.result.textContent = result;
+          });
+
+          // Add event listener for the Operator select
+          this.operator.addEventListener("change", () => {
+            switch (this.operator.value) {
+              case "add":
+                this.strategy = new AdditionStrategy();
+                break;
+              case "sub":
+                this.strategy = new SubtractionStrategy();
+                break;
+              case "mul":
+                this.strategy = new MultiplicationStrategy();
+                break;
+              case "div":
+                this.strategy = new DivisionStrategy();
+                break;
+            }
+          });
+        }
+      }
+
+      // Create a new instance of the Calculator context
+      const calculator = new Calculator();
+    </script>
+  </body>
+</html>
